@@ -164,7 +164,7 @@ class ArgParser {
     uint64_t freqHz;                      ///< Clock frequency in Hz
     bool segmented;                       ///< Flag indicating if the design is segmented
     Platform platform;                    ///< Target platform
-    std::array<bool, 4> networkInterfacessubmodules/v80-vitis-flow/include/arg_parser/arg_parser.hpp = {false, false, false, false};  ///< Network interface flags
+    std::array<bool, 4> networkInterfaces = {false, false, false, false};  ///< Network interface flags
     /**
      * @brief Parses kernel information from configuration files.
      * @return Vector of parsed kernel objects.
