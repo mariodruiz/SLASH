@@ -852,10 +852,10 @@ std::string BdBuilder::connectAxis(std::string krnl_name) {
                       "/M_AXIS] [get_bd_intf_pins base_logic/" + el->dst.kernelName + "/" +
                       el->dst.interfaceName + "]\n";
             result += "  connect_bd_net [get_bd_pins " + fifoName +
-                      "/s_axis_aresetn] [get_bd_pins qsfp_0_n_1/m_axi_rx_aresetn]\n";
+                      "/s_axis_aresetn] [get_bd_pins qsfp_0_n_1/ap_rst_n]\n";
 
             result += "connect_bd_net [get_bd_pins " + fifoName +
-                      "/s_axis_aclk] [get_bd_pins qsfp_0_n_1/m_axis_rx_aclk]\n";
+                      "/s_axis_aclk] [get_bd_pins qsfp_0_n_1/ap_clk]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
                       "/m_axis_aclk] [get_bd_pins base_logic/clk_wiz/clk_out1]\n";
             // result += "connect_bd_intf_net [get_bd_intf_pins base_logic/" + el->dst.kernelName +
@@ -874,11 +874,11 @@ std::string BdBuilder::connectAxis(std::string krnl_name) {
             result += "connect_bd_intf_net [get_bd_intf_pins " + fifoName + "/M_AXIS]" +
                       " -boundary_type upper [get_bd_intf_pins qsfp_0_n_1/S_AXIS_0]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
-                      "/s_axis_aresetn] [get_bd_pins qsfp_0_n_1/m_axi_tx_aresetn]\n";
+                      "/s_axis_aresetn] [get_bd_pins qsfp_0_n_1/ap_rst_n]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
                       "/s_axis_aclk] [get_bd_pins base_logic/clk_wiz/clk_out1]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
-                      "/m_axis_aclk] [get_bd_pins qsfp_0_n_1/m_axis_tx_aclk]\n";
+                      "/m_axis_aclk] [get_bd_pins qsfp_0_n_1/ap_clk]\n";
             result += "connect_bd_intf_net [get_bd_intf_pins base_logic/" + el->src.kernelName +
                       "/" + el->src.interfaceName + "] [get_bd_intf_pins " + fifoName +
                       "/S_AXIS]\n";
@@ -900,10 +900,10 @@ std::string BdBuilder::connectAxis(std::string krnl_name) {
                       "/M_AXIS] [get_bd_intf_pins base_logic/" + el->dst.kernelName + "/" +
                       el->dst.interfaceName + "]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
-                      "/s_axis_aresetn] [get_bd_pins qsfp_2_n_3/m_axi_rx_aresetn]\n";
+                      "/s_axis_aresetn] [get_bd_pins qsfp_2_n_3/ap_rst_n]\n";
 
             result += "connect_bd_net [get_bd_pins " + fifoName +
-                      "/s_axis_aclk] [get_bd_pins qsfp_2_n_3/m_axis_rx_aclk]\n";
+                      "/s_axis_aclk] [get_bd_pins qsfp_2_n_3/ap_clk]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
                       "/m_axis_aclk] [get_bd_pins base_logic/clk_wiz/clk_out1]\n";
             // result += "connect_bd_intf_net [get_bd_intf_pins base_logic/" + el->dst.kernelName +
@@ -922,11 +922,11 @@ std::string BdBuilder::connectAxis(std::string krnl_name) {
             result += "connect_bd_intf_net [get_bd_intf_pins " + fifoName + "/M_AXIS]" +
                       " -boundary_type upper [get_bd_intf_pins qsfp_2_n_3/S_AXIS_0]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
-                      "/s_axis_aresetn] [get_bd_pins qsfp_2_n_3/m_axi_tx_aresetn]\n";
+                      "/s_axis_aresetn] [get_bd_pins qsfp_2_n_3/ap_rst_n]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
                       "/s_axis_aclk] [get_bd_pins base_logic/clk_wiz/clk_out1]\n";
             result += "connect_bd_net [get_bd_pins " + fifoName +
-                      "/m_axis_aclk] [get_bd_pins qsfp_2_n_3/m_axis_tx_aclk]\n";
+                      "/m_axis_aclk] [get_bd_pins qsfp_2_n_3/ap_clk]\n";
             result += "connect_bd_intf_net [get_bd_intf_pins base_logic/" + el->src.kernelName +
                       "/" + el->src.interfaceName + "] [get_bd_intf_pins " + fifoName +
                       "/S_AXIS]\n";

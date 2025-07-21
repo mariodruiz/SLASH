@@ -1391,7 +1391,13 @@ proc create_bar_sc { parentCell } {
 }
 
 proc add_dcmac {} {
-    source "dcmac_config.tcl"
+    source "src/dcmac/tcl/dcmac_config.tcl"
+    import_files -fileset sources_1 -norecurse "src/dcmac/hdl/axis_seg_to_unseg_converter.v"
+    import_files -fileset sources_1 -norecurse "src/dcmac/hdl/clock_to_clock_bus.v"
+    import_files -fileset sources_1 -norecurse "src/dcmac/hdl/dcmac200g_ctl_port.v"
+    import_files -fileset sources_1 -norecurse "src/dcmac/hdl/serdes_clock.v"
+    import_files -fileset sources_1 -norecurse "src/dcmac/hdl/syncer_reset.v"
+  
     if { ${DCMAC0_ENABLED} == "1" || ${DCMAC1_ENABLED} == "1" } {
         create_bar_sc ""
     }
