@@ -208,6 +208,7 @@ void Device::bootDevice() {
                 destroyAmiDev();
                 pcieHandler.execute(PcieDriverHandler::Command::REMOVE);
                 pcieHandler.execute(PcieDriverHandler::Command::TOGGLE_SBR);
+                usleep(5000000);
                 pcieHandler.execute(PcieDriverHandler::Command::RESCAN);
                 pcieHandler.execute(PcieDriverHandler::Command::HOTPLUG);
                 createAmiDev();
@@ -265,6 +266,7 @@ void Device::bootDevice() {
             destroyAmiDev();
             pcieHandler.execute(PcieDriverHandler::Command::REMOVE);
             pcieHandler.execute(PcieDriverHandler::Command::TOGGLE_SBR);
+            usleep(5000000);
             pcieHandler.execute(PcieDriverHandler::Command::RESCAN);
             pcieHandler.execute(PcieDriverHandler::Command::HOTPLUG);
             createAmiDev();
