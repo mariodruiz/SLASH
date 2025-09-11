@@ -1,4 +1,4 @@
-deploy/base_pdi/build.py# ##################################################################################################
+# ##################################################################################################
 #  The MIT License (MIT)
 #  Copyright (c) 2025 Advanced Micro Devices, Inc. All rights reserved.
 # 
@@ -18,10 +18,30 @@ deploy/base_pdi/build.py# ######################################################
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # ##################################################################################################
 
-set build_dir "build"
-open_project $build_dir/prj.xpr
-open_run synth_1
-set_property lock true [get_noc_net_routes -of [get_noc_logical_paths -filter {initial_boot == 1}]]
-set_property lock true [get_noc_net_routes -of [get_noc_logical_paths -of [get_noc_logical_instances *n?u128*]]]
-write_noc_solution -file noc_sol.ncr
-exit
+name: CI Build SW
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    permissions: { contents: read }
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y build-essential linux-headers-$(uname -r) libxml2-dev libzmq3-dev libjsoncpp-dev
+
+      - name: Build hotplug driver
+        if: ${{ false }}
+        run: |
+          cd ${{ github.workspace }}/submodules/pcie-hotplug-drv/ && make
+
+      - name: Build linker
+        run: |
+          cd ${{ github.workspace }}/submodules/v80-vitis-flow && cmake . && make
