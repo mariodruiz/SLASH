@@ -20,6 +20,8 @@
 
 #include "api/device.hpp"
 
+#include "utils/filesystem_cache.hpp"
+
 namespace vrt {
 
 Device::Device(const std::string& bdf, const std::string& vrtbinPath, bool program,
@@ -41,7 +43,7 @@ Device::Device(const std::string& bdf, const std::string& vrtbinPath, bool progr
             programDevice();
         }
         parseSystemMap();
-        this->clkWiz.setRateHz(clockFreq, false);
+        this->clkWiz.setRateHz(200000000, false);
     } else if (platform == Platform::EMULATION) {
         parseSystemMap();
         std::string emulationExecPath = this->vrtbin.getEmulationExec() + " >/dev/null";
@@ -62,7 +64,9 @@ Device::Device(const std::string& bdf, const std::string& vrtbinPath, bool progr
     }
 }
 
-Device::~Device() {}
+Device::~Device() {
+    unlockPcieDevice(bdf);
+}
 
 void Device::parseSystemMap() {
     XMLParser parser(systemMap);
@@ -206,6 +210,7 @@ void Device::bootDevice() {
                 destroyAmiDev();
                 pcieHandler.execute(PcieDriverHandler::Command::REMOVE);
                 pcieHandler.execute(PcieDriverHandler::Command::TOGGLE_SBR);
+                usleep(5000000);
                 pcieHandler.execute(PcieDriverHandler::Command::RESCAN);
                 pcieHandler.execute(PcieDriverHandler::Command::HOTPLUG);
                 createAmiDev();
@@ -263,6 +268,7 @@ void Device::bootDevice() {
             destroyAmiDev();
             pcieHandler.execute(PcieDriverHandler::Command::REMOVE);
             pcieHandler.execute(PcieDriverHandler::Command::TOGGLE_SBR);
+            usleep(5000000);
             pcieHandler.execute(PcieDriverHandler::Command::RESCAN);
             pcieHandler.execute(PcieDriverHandler::Command::HOTPLUG);
             createAmiDev();
@@ -331,7 +337,7 @@ void Device::setFrequency(uint64_t freq) {
                                "Setting frequency {}, which is higher than max frequency {}", freq,
                                clockFreq);
         }
-        clkWiz.setRateHz(freq);
+        clkWiz.setRateHz(200000000);
     }
 }
 
@@ -376,7 +382,7 @@ Allocator* Device::getAllocator() { return allocator; }
 std::vector<QdmaIntf*> Device::getQdmaInterfaces() { return qdmaIntfs; }
 
 void Device::lockPcieDevice(const std::string& bdf) {
-    std::string lockFile = "/tmp/pcie_device_" + bdf + ".lock";
+    std::string lockFile = FilesystemCache::getRuntimePath() / ("pcie_device_" + bdf + ".lock");
     int fd = open(lockFile.c_str(), O_CREAT | O_WRONLY, 0666);
     if (fd == -1) {
         throw std::runtime_error("Failed to lock PCIe device " + bdf);
@@ -389,7 +395,7 @@ void Device::lockPcieDevice(const std::string& bdf) {
 }
 
 void Device::unlockPcieDevice(const std::string& bdf) {
-    std::string lockFile = "/tmp/pcie_device_" + bdf + ".lock";
+    std::string lockFile = FilesystemCache::getRuntimePath() / ("pcie_device_" + bdf + ".lock");
     int fd = open(lockFile.c_str(), O_WRONLY, 0666);
     if (fd == -1) {
         throw std::runtime_error("Failed to lock PCIe device " + bdf);

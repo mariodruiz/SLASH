@@ -20,7 +20,9 @@
 
 #include "bd_builder.hpp"
 
+#include "arg_parser.hpp"
 #include "system_map.hpp"
+#include <sstream>
 
 bool BdBuilder::hasAximmIntf = false;
 
@@ -32,13 +34,16 @@ BdBuilder::BdBuilder(std::vector<Kernel> kernels, std::vector<Connection> connec
 
 BdBuilder::BdBuilder(std::vector<Kernel> kernels, std::vector<Connection> connections,
                      double targetClockFreq, bool segmented, Platform platform,
-                     std::array<bool, 4> netInterfaces)
+                     std::array<bool, 4> netInterfaces,
+                    TclInjections tclInjections)
     : systemMap(segmented, platform), netInterfaces(netInterfaces) {
     this->kernels = kernels;
     this->streamConnections = connections;
     this->targetClockFreq = targetClockFreq;
     this->segmented = segmented;
     this->platform = platform;
+    this->tclInjections = std::move(tclInjections);
+
     systemMap.setClockFreq(targetClockFreq);
     StreamingConnection qdmaStreamConnection;
     for (auto sc = streamConnections.begin(); sc != streamConnections.end(); sc++) {
@@ -95,6 +100,13 @@ void BdBuilder::buildBlockDesign() {
     } else {
         blockDesignFile.open(OUTPUT_FILE);
         netConfigFile.open(NET_CONFIG_FILE);
+    std::ofstream postBuildScriptFile;
+    if (platform == Platform::EMULATOR) {
+        blockDesignFile.open("/dev/null");
+        postBuildScriptFile.open("/dev/null");
+    } else {
+        blockDesignFile.open(PRE_OUTPUT_FILE);
+        postBuildScriptFile.open(POST_OUTPUT_FILE);
     }
 
     if (platform == Platform::HARDWARE) {
@@ -209,10 +221,39 @@ void BdBuilder::buildBlockDesign() {
         // blockDesignFile << assignQdmaLogicGpioAddr() << std::endl;
         blockDesignFile << "assign_bd_address" << std::endl;
 
-        if (segmented) blockDesignFile << setSegmented() << std::endl;
+        if (segmented) {
+            blockDesignFile << "set_property segmented_configuration true [current_project]\n";
+            try {
+                blockDesignFile << setSegmented() << std::endl;
+            } catch (...){
+                utils::Logger::log(utils::LogLevel::INFO, __PRETTY_FUNCTION__, "Segmented not set");
+            }
+        }
+
+
+
+        for (const auto &script : tclInjections.scriptsPreSynth) {
+            blockDesignFile << generateSourceInstruction(script);
+        }
 
         blockDesignFile << printFooter();
         blockDesignFile.close();
+
+        // Inline and dirty.
+        postBuildScriptFile << "proc run_post {} {\n"
+            << "\topen_run impl_1\n"
+            << "\treport_utilization -hierarchical -hierarchical_depth 3 -hierarchical_percentages -file build/report_utilization.txt\n"
+            << "\treport_timing_summary -delay_type min_max -check_timing_verbose -max_paths 1 -input_pins -routable_nets -name timing_1 -file build/report_timing.txt\n\n";
+
+
+        for (const auto &script : tclInjections.scriptsPostBuild) {
+            postBuildScriptFile << generateSourceInstruction(script);
+        }
+
+        postBuildScriptFile << "}\n"
+            << "run_post\n";
+
+
         systemMap.printToFile();
     } else if (platform == Platform::SIMULATOR) {
         std::string line;
@@ -993,6 +1034,7 @@ std::string BdBuilder::setupSysRst() {
 }
 
 std::string BdBuilder::printFooter() {
+    utils::Logger::log(utils::LogLevel::INFO, __PRETTY_FUNCTION__, "Print TCL footer");
     std::stringstream ss;
     ss << "}\n";
     return ss.str();
@@ -1070,8 +1112,7 @@ std::string BdBuilder::setSegmented() {
         }
     }
     std::stringstream ss;
-    ss << "set_property segmented_configuration true [current_project]\n"
-       << "set_property NOC_SOLUTION_FILE " << std::string(resolvedPath) << " [get_runs impl_1]\n";
+    ss << "set_property NOC_SOLUTION_FILE " << std::string(resolvedPath) << " [get_runs impl_1]\n";
     return ss.str();
 }
 
@@ -1464,5 +1505,17 @@ std::string BdBuilder::addBarCrossbar() {
     ss << "connect_bd_net [get_bd_pins bar_sc/aclk] [get_bd_pins cips/pl0_ref_clk]\n";
     ss << "connect_bd_net [get_bd_pins bar_sc/aresetn] [get_bd_pins cips/pl0_resetn]\n";
     ss << "save_bd_design\n";
+    return ss.str();
+}
+std::string BdBuilder::generateSourceInstruction(const std::string& path) const {
+    std::stringstream ss;
+
+    if (path.find("{") != std::string::npos
+        || path.find("}") != std::string::npos) {
+        throw std::runtime_error("Path to script to source cannot contian '{' or '}'");
+    }
+
+    ss << "\tsource {" << path << "}\n";
+
     return ss.str();
 }
