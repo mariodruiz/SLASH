@@ -113,7 +113,8 @@ class BdBuilder {
      */
     BdBuilder(std::vector<Kernel> kernels, std::vector<Connection> connections,
               double targetClockFreq, bool segmented, Platform platform,
-              std::array<bool, 4> netInterfaces);
+              std::array<bool, 4> netInterfaces,
+              TclInjections tclInjections);
 
     /**
      * @brief Builds the block design by generating TCL commands.
