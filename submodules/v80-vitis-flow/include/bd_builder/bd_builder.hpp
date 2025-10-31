@@ -56,9 +56,7 @@ class BdBuilder {
     std::string OUTPUT_FILE = "run_pre.tcl";           ///< Output TCL file name
     std::string NET_CONFIG_FILE = "dcmac_config.tcl";  ///< Network configuration file
     std::string NOC_SOLUTION = "../resources/noc_sol.ncr";  ///< NoC solution file path
-    std::string DCMAC_NOC_SOLUTION =
-        "../resources/noc_sol_dcmac.ncr";  ///< NoC solution file path for DCMAC
-        "../resources/sim_prj.tcl";           ///< Base TCL file for simulation platform
+    std::string DCMAC_NOC_SOLUTION = "../resources/noc_sol_dcmac.ncr";  ///< NoC solution file path for DCMAC
     std::string PRE_OUTPUT_FILE = "run_pre.tcl";  ///< Output pre TCL file name
     std::string POST_OUTPUT_FILE = "run_post.tcl"; ///< Output post TCL file name
     std::string NOC_SOLUTION = "../resources/noc_sol_compute.ncr";  ///< NoC solution file path
