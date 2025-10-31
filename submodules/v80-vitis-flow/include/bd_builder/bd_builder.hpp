@@ -79,7 +79,6 @@ class BdBuilder {
     bool segmented;                             ///< Flag indicating if design is segmented
     Platform platform;                  ///< Target platform (hardware, simulation, emulation)
     std::array<bool, 4> netInterfaces;  ///< Array indicating which network interfaces to use
-    Platform platform;  ///< Target platform (hardware, simulation, emulation)
     TclInjections tclInjections; ///< Set of Tcl files to inject
 
     /**
