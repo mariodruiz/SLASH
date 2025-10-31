@@ -94,18 +94,15 @@ void BdBuilder::buildBlockDesign() {
     }
     std::ofstream blockDesignFile;
     std::ofstream netConfigFile;
+    std::ofstream postBuildScriptFile;
+
     if (platform == Platform::EMULATOR) {
         blockDesignFile.open("/dev/null");
         netConfigFile.open("/dev/null");
+        postBuildScriptFile.open("/dev/null");
     } else {
         blockDesignFile.open(OUTPUT_FILE);
         netConfigFile.open(NET_CONFIG_FILE);
-    std::ofstream postBuildScriptFile;
-    if (platform == Platform::EMULATOR) {
-        blockDesignFile.open("/dev/null");
-        postBuildScriptFile.open("/dev/null");
-    } else {
-        blockDesignFile.open(PRE_OUTPUT_FILE);
         postBuildScriptFile.open(POST_OUTPUT_FILE);
     }
 
@@ -114,8 +111,7 @@ void BdBuilder::buildBlockDesign() {
         netConfigFile << configNetInterfaces();
         blockDesignFile << addRunPreHeader();
         blockDesignFile << setupQdmaStreaming();
-        // Not fully supported yet
-        // blockDesignFile << addQdmaLogic();
+        blockDesignFile << addQdmaLogic();
         blockDesignFile << setupClkWiz();
         blockDesignFile << setupSysRst();
         blockDesignFile << configNumberOfAXILiteSlaves();  // done
@@ -128,7 +124,7 @@ void BdBuilder::buildBlockDesign() {
                         [](bool enabled) { return !enabled; })) {
             blockDesignFile << addBarCrossbar();
         }
-        // blockDesignFile << connectQdmaLogic();
+         blockDesignFile << connectQdmaLogic();
         // blockDesignFile << connectQdmaToRouter();
 
         // do this for each kernel to be added
