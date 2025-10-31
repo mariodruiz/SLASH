@@ -48,7 +48,7 @@ hls:
 	@echo "Running HLS step"
 	$(MAKE) -C $(HLS_DIR)
 
-hw: setup hls
+hw: setup $(UDP) hls
 	@echo "Running HW step"
 	cd $(VPP_DIR) && \
 	./scripts/v80++ --design-name $(DESIGN_NAME) --cfg $(HOME_DIR)/config.cfg --platform hw --segmented --kernels $(HLS_DIR)/$(HLS_BUILD_DIR_TRAFFIC_PRODUCER)/sol1 && \
