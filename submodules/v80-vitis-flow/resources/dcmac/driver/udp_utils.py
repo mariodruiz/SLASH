@@ -558,7 +558,9 @@ class RTLTrafficGenerator(DefaultIP):
             tot_pkts = int(self.read_long(self.registers['out_traffic_packets']['offset']))
 
         tot_time = (1 / (self.freq * 10 ** 6)) * tot_cycles
-        thr_bs = (tot_bytes * 8) / tot_time
+        thr_bs = 0.0
+        if tot_time > 0:
+            thr_bs = (tot_bytes * 8) / tot_time
 
         return tot_pkts, thr_bs / (10 ** 9), tot_time
 
@@ -581,7 +583,7 @@ class RTLTrafficGenerator(DefaultIP):
         An integer with the packet read from the Traffic Generator
         """
 
-        return int(self.read_long(self.registers['output_packet']['offset']))
+        return int(self.read_long(self.registers['out_traffic_packets']['offset']))
 
 class CollectorIP(DefaultIP):
     """ This class wraps the common function the collector Kernel

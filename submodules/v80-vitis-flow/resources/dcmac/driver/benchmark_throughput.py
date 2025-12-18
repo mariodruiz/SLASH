@@ -8,7 +8,7 @@ from dcmac_mmio import DCMAC
 from utils import add_common_args, get_ip_offset
 from udp_utils import NetworkLayer, RTLTrafficGenerator, TgMode
 
-"""This file aims at benchmarking thorughput on the V80 using the UDP stack. 
+"""This file aims at benchmarking thorughput on the V80 using the UDP stack.
 It uses interface 0 and 2. It will initialize the DCMAC and then setup the
 interfaces IP, MAC addresses as well as the UDP socket table and traffic generators.
 """
@@ -121,7 +121,7 @@ def main(args):
             entry_dict = {'size': (beats * 64), 'rx_pkts' : rx_tot_pkt, 'tx_thr': tx_thr, 'rx_thr': rx_thr}
             local_dict[beats] = entry_dict
             # Reset probes to prepare for next computation
-            theoretical = (beats * 64 * 100)/((beats*64) + overhead)
+            theoretical = (beats * 64 * 200)/((beats*64) + overhead)
             print(f'Sent {pkt:14,} size: {beats*64:4}-Byte done!	'
                   f'Got {rx_tot_pkt:14,} took {rx_time:8.4f} sec, '
                   f'thr: {rx_thr:.3f} Gbps, theoretical: {theoretical:.3f} Gbps'
