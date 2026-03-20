@@ -59,3 +59,4 @@ app: setup
 clean:
 	rm -rf $(BUILD_DIR)
 	make -C $(HLS_DIR) clean
+	rm -rf *.jou *.log

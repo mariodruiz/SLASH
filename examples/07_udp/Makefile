@@ -73,3 +73,4 @@ clean:
 distclean: clean
 	make -C $(UDP_DIR) distclean
 	make -C $(BENCHMARK_DIR) distclean
+	rm -rf *.jou *.log

@@ -1267,12 +1267,12 @@ proc create_hier_cell_qsfp { parentCell nameHier dcmac_index dual_dcmac} {
   connect_bd_net -net gt0_rx_reset_done_dout [get_bd_pins DCMAC_subsys/gt0_rx_reset_done] [get_bd_pins clk_n_resets/gt0_rx_reset_done] [get_bd_pins control_intf/gt0_rx_reset_done]
   connect_bd_net -net gt0_tx_reset_done_dout [get_bd_pins DCMAC_subsys/gt0_tx_reset_done] [get_bd_pins clk_n_resets/gt0_tx_reset_done] [get_bd_pins control_intf/gt0_tx_reset_done]
   connect_bd_net -net s_axi_aclk_1 [get_bd_pins ap_clk] [get_bd_pins DCMAC_subsys/s_axi_aclk] [get_bd_pins control_intf/s_axi_aclk]
-  connect_bd_net -net s_axi_aresetn_1 [get_bd_pins ap_rst_n] [get_bd_pins clk_n_resets/s_axi_aresetn] [get_bd_pins DCMAC_subsys/s_axi_aresetn] [get_bd_pins control_intf/s_axi_aresetn]
   connect_bd_net -net sys_reset_rx_peripheral_aresetn [get_bd_pins clk_n_resets/aresetn_rx_390mhz] [get_bd_pins DCMAC_subsys/aresetn_rx_390mhz] [get_bd_pins adwc0_1024_512/aresetn] [get_bd_pins rx0_fifo_cdc/s_axis_aresetn]
-  connect_bd_net -net sys_reset_tx_peripheral_aresetn [get_bd_pins clk_n_resets/aresetn_tx_390mhz] [get_bd_pins adwc0_512_1024/aresetn] [get_bd_pins tx0_packet_fifo_cdc/s_axis_aresetn] [get_bd_pins DCMAC_subsys/aresetn_tx_390mhz]
+  connect_bd_net -net sys_reset_tx_peripheral_aresetn [get_bd_pins clk_n_resets/aresetn_tx_390mhz] [get_bd_pins adwc0_512_1024/aresetn] [get_bd_pins DCMAC_subsys/aresetn_tx_390mhz]
   connect_bd_net -net ts_clk_clk_clock_bus_clockbus [get_bd_pins clk_n_resets/clockbus_350] [get_bd_pins DCMAC_subsys/ts_clk_bus_350mhz]
 
   connect_bd_net [get_bd_pins ap_clk] [get_bd_pins tx0_packet_fifo_cdc/s_axis_aclk] [get_bd_pins rx0_fifo_cdc/m_axis_aclk]
+  connect_bd_net -net s_axi_aresetn_1 [get_bd_pins ap_rst_n] [get_bd_pins clk_n_resets/s_axi_aresetn] [get_bd_pins DCMAC_subsys/s_axi_aresetn] [get_bd_pins control_intf/s_axi_aresetn] [get_bd_pins tx0_packet_fifo_cdc/s_axis_aresetn]
 
   if { ${dual_dcmac} == "1" } {
     connect_bd_intf_net [get_bd_intf_pins qsfp_gt1] [get_bd_intf_pins DCMAC_subsys/qsfp_gt1]
