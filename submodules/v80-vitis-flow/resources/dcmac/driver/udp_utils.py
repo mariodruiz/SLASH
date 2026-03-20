@@ -480,10 +480,10 @@ class RTLTrafficGenerator(DefaultIP):
     """ This class wraps the common function of the RTL Traffic Generator IP"""
 
     def __init__(self, device: str = 'e2', base_offset: int = 0x0,
-                 debug: bool = False):
+                 freq: float=None, debug: bool = False):
         super().__init__(device, base_offset, debug)
         self.registers = rtl_tg_regs
-        self.freq = None
+        self.freq = freq
 
     def start(self, mode: TgMode, dest: int=0, packets: int=None,
               beats: int=None, tbwp: int=None):
