@@ -480,10 +480,11 @@ class RTLTrafficGenerator(DefaultIP):
     """ This class wraps the common function of the RTL Traffic Generator IP"""
 
     def __init__(self, device: str = 'e2', base_offset: int = 0x0,
-                 freq: float=None, debug: bool = False):
+                 freq: float=None, id: int=None, debug: bool = False):
         super().__init__(device, base_offset, debug)
         self.registers = rtl_tg_regs
         self.freq = freq
+        self.id = id
 
     def start(self, mode: TgMode, dest: int=0, packets: int=None,
               beats: int=None, tbwp: int=None):
@@ -572,6 +573,14 @@ class RTLTrafficGenerator(DefaultIP):
         """Set Traffic Generator in consumer mode
         """
         self.write(self.registers['mode']['offset'], int(TgMode.CONSUMER.value))
+
+    @property
+    def mode(self) -> str:
+        val = self.read(self.registers['mode']['offset'])
+        try:
+            return TgMode(val).name
+        except ValueError:
+            return "Configured Mode on the IP is not supported"
 
     def read_output_packet(self) -> int:
         """Read one output packet from the Traffic Generator

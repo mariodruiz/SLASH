@@ -9,7 +9,7 @@ from dcmac_mmio import DCMAC
 from utils import add_common_args, get_ip_offset
 from udp_utils import NetworkLayer, RTLTrafficGenerator, TgMode
 
-"""This file aims at benchmarking throughput on the V80 using the UDP stack. 
+"""This file aims at benchmarking throughput on the V80 using the UDP stack.
 It uses interface 0 and 2. It will initialize the DCMAC and then setup the
 interfaces IP, MAC addresses as well as the UDP socket table and traffic generators.
 """
@@ -100,12 +100,17 @@ def main(args):
 
     freq = 200
     tgen_tx = RTLTrafficGenerator(args.dev,
-                                  get_ip_offset(TRAFFICGEN_BASEADDR + TG_INCREMENT * tx_socket_idx, init_args_0.dcmac * 2), freq)
+                                  get_ip_offset(TRAFFICGEN_BASEADDR + TG_INCREMENT * tx_socket_idx, init_args_0.dcmac * 2),
+                                  freq, tx_socket_idx)
     tgen_rx = RTLTrafficGenerator(args.dev,
-                                  get_ip_offset(TRAFFICGEN_BASEADDR + TG_INCREMENT * rx_socket_idx, init_args_1.dcmac * 2), freq)
+                                  get_ip_offset(TRAFFICGEN_BASEADDR + TG_INCREMENT * rx_socket_idx, init_args_1.dcmac * 2),
+                                  freq, rx_socket_idx)
 
     # Set RX in consumer mode
     tgen_rx.consumer_mode()
+
+    print(f'TX Benchmark IP: {tgen_tx.id=} with base_offset=0x{tgen_tx._base_offset:0X} on mode: {tgen_tx.mode}')
+    print(f'RX Benchmark IP: {tgen_rx.id=} with base_offset=0x{tgen_rx._base_offset:0X} on mode: {tgen_tx.mode}')
 
     # overhead is UDP (8), IP (20), Ethernet(14) and FCS (4), IFG (12), preamble (7), start frame delimiter (1)
     overhead = 8 + 20 + 14 + 4 + 12 + 7 + 1
