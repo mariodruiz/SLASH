@@ -1156,7 +1156,7 @@ set_property APERTURES {{0x208_0000_0000 32G}} [get_bd_intf_ports S_VIRT_03]
     set_property -dict [list CONFIG.FREQ_HZ {322265625}] $__clk
     connect_bd_intf_net $__clk [get_bd_intf_pins ${__hier}/qsfp_gt_clk]
 
-    connect_bd_net [get_bd_ports clk_freerunning] [get_bd_pins ${__hier}/clk_freerunning]
+    connect_bd_net [get_bd_ports freerunning_clk] [get_bd_pins ${__hier}/freerunning_clk]
 
     set __gt0 [slash_get_or_create_intf_port qsfp${__idx}_4x Master \
                  xilinx.com:interface:gt_rtl:1.0]
