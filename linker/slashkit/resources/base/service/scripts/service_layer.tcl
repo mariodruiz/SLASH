@@ -1606,6 +1606,14 @@ proc create_root_design { parentCell } {
   [get_bd_pins eth_5/ap_clk] \
   [get_bd_pins eth_6/ap_clk] \
   [get_bd_pins eth_7/ap_clk] \
+  [get_bd_pins sl2noc_0/aclk0] \
+  [get_bd_pins sl2noc_1/aclk0] \
+  [get_bd_pins sl2noc_2/aclk0] \
+  [get_bd_pins sl2noc_3/aclk0] \
+  [get_bd_pins sl2noc_4/aclk0] \
+  [get_bd_pins sl2noc_5/aclk0] \
+  [get_bd_pins sl2noc_6/aclk0] \
+  [get_bd_pins sl2noc_7/aclk0] \
   [get_bd_pins smartconnect_1/aclk] \
   [get_bd_pins axi_noc_0/aclk0] \
   [get_bd_pins noc_virt_0/aclk0] \
@@ -1651,14 +1659,6 @@ proc create_root_design { parentCell } {
   [get_bd_pins dummy_noc_m_5/aclk0] \
   [get_bd_pins dummy_noc_m_6/aclk0] \
   [get_bd_pins dummy_noc_m_7/aclk0] \
-  [get_bd_pins sl2noc_0/aclk0] \
-  [get_bd_pins sl2noc_1/aclk0] \
-  [get_bd_pins sl2noc_2/aclk0] \
-  [get_bd_pins sl2noc_3/aclk0] \
-  [get_bd_pins sl2noc_4/aclk0] \
-  [get_bd_pins sl2noc_5/aclk0] \
-  [get_bd_pins sl2noc_6/aclk0] \
-  [get_bd_pins sl2noc_7/aclk0] \
   [get_bd_pins qsfp_0_n_1/aclk] \
   [get_bd_pins qsfp_2_n_3/aclk] \
   [get_bd_pins traffic_producer_1/ap_clk] \
