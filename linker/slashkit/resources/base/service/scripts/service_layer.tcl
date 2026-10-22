@@ -507,6 +507,7 @@ proc create_root_design { parentCell } {
    CONFIG.ASSOCIATED_RESET {arstn} \
    CONFIG.CLK_DOMAIN {bd_4885_pspmc_0_0_pl0_ref_clk} \
  ] $service_clk
+  set network_clk [ create_bd_port -dir I -type clk -freq_hz 400000000 network_clk ]
   set freerunning_clk [ create_bd_port -dir I -type clk -freq_hz 100000000 freerunning_clk ]
   set arstn [ create_bd_port -dir I -type rst arstn ]
 
@@ -1121,7 +1122,7 @@ proc create_root_design { parentCell } {
   # Create instance: smartconnect_0, and set properties
   set smartconnect_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect_0 ]
   set_property -dict [list \
-    CONFIG.NUM_CLKS {1} \
+    CONFIG.NUM_CLKS {2} \
     CONFIG.NUM_MI {14} \
     CONFIG.NUM_SI {1} \
   ] $smartconnect_0
@@ -1596,28 +1597,6 @@ proc create_root_design { parentCell } {
   [get_bd_pins util_ds_buf_0/BUFG_FABRIC_I]
 
   connect_bd_net -net clk_wizard_0_clk_out1  [get_bd_ports service_clk] \
-  [get_bd_pins dummy_noc_0/aclk0] \
-  [get_bd_pins dummy_noc_1/aclk0] \
-  [get_bd_pins dummy_noc_2/aclk0] \
-  [get_bd_pins dummy_noc_3/aclk0] \
-  [get_bd_pins dummy_noc_4/aclk0] \
-  [get_bd_pins dummy_noc_5/aclk0] \
-  [get_bd_pins dummy_noc_6/aclk0] \
-  [get_bd_pins dummy_noc_7/aclk0] \
-  [get_bd_pins dummy_noc_m_0/aclk0] \
-  [get_bd_pins dummy_noc_m_1/aclk0] \
-  [get_bd_pins dummy_noc_m_2/aclk0] \
-  [get_bd_pins dummy_noc_m_3/aclk0] \
-  [get_bd_pins dummy_noc_m_4/aclk0] \
-  [get_bd_pins dummy_noc_m_5/aclk0] \
-  [get_bd_pins dummy_noc_m_6/aclk0] \
-  [get_bd_pins dummy_noc_m_7/aclk0] \
-  [get_bd_pins traffic_producer_1/ap_clk] \
-  [get_bd_pins traffic_producer_2/ap_clk] \
-  [get_bd_pins traffic_producer_3/ap_clk] \
-  [get_bd_pins traffic_producer_5/ap_clk] \
-  [get_bd_pins traffic_producer_6/ap_clk] \
-  [get_bd_pins traffic_producer_7/ap_clk] \
   [get_bd_pins smartconnect_0/aclk] \
   [get_bd_pins eth_0/ap_clk] \
   [get_bd_pins eth_1/ap_clk] \
@@ -1627,16 +1606,6 @@ proc create_root_design { parentCell } {
   [get_bd_pins eth_5/ap_clk] \
   [get_bd_pins eth_6/ap_clk] \
   [get_bd_pins eth_7/ap_clk] \
-  [get_bd_pins sl2noc_0/aclk0] \
-  [get_bd_pins sl2noc_1/aclk0] \
-  [get_bd_pins sl2noc_2/aclk0] \
-  [get_bd_pins sl2noc_3/aclk0] \
-  [get_bd_pins sl2noc_4/aclk0] \
-  [get_bd_pins sl2noc_5/aclk0] \
-  [get_bd_pins sl2noc_6/aclk0] \
-  [get_bd_pins sl2noc_7/aclk0] \
-  [get_bd_pins qsfp_0_n_1/aclk] \
-  [get_bd_pins qsfp_2_n_3/aclk] \
   [get_bd_pins smartconnect_1/aclk] \
   [get_bd_pins axi_noc_0/aclk0] \
   [get_bd_pins noc_virt_0/aclk0] \
@@ -1665,6 +1634,40 @@ proc create_root_design { parentCell } {
   [get_bd_pins noc_virt_2/aclk0] \
   [get_bd_pins noc_virt_4/aclk0] \
   [get_bd_pins c_shift_ram_0/CLK]
+  connect_bd_net -net network_clk_1  [get_bd_ports network_clk] \
+  [get_bd_pins dummy_noc_0/aclk0] \
+  [get_bd_pins dummy_noc_1/aclk0] \
+  [get_bd_pins dummy_noc_2/aclk0] \
+  [get_bd_pins dummy_noc_3/aclk0] \
+  [get_bd_pins dummy_noc_4/aclk0] \
+  [get_bd_pins dummy_noc_5/aclk0] \
+  [get_bd_pins dummy_noc_6/aclk0] \
+  [get_bd_pins dummy_noc_7/aclk0] \
+  [get_bd_pins dummy_noc_m_0/aclk0] \
+  [get_bd_pins dummy_noc_m_1/aclk0] \
+  [get_bd_pins dummy_noc_m_2/aclk0] \
+  [get_bd_pins dummy_noc_m_3/aclk0] \
+  [get_bd_pins dummy_noc_m_4/aclk0] \
+  [get_bd_pins dummy_noc_m_5/aclk0] \
+  [get_bd_pins dummy_noc_m_6/aclk0] \
+  [get_bd_pins dummy_noc_m_7/aclk0] \
+  [get_bd_pins sl2noc_0/aclk0] \
+  [get_bd_pins sl2noc_1/aclk0] \
+  [get_bd_pins sl2noc_2/aclk0] \
+  [get_bd_pins sl2noc_3/aclk0] \
+  [get_bd_pins sl2noc_4/aclk0] \
+  [get_bd_pins sl2noc_5/aclk0] \
+  [get_bd_pins sl2noc_6/aclk0] \
+  [get_bd_pins sl2noc_7/aclk0] \
+  [get_bd_pins qsfp_0_n_1/aclk] \
+  [get_bd_pins qsfp_2_n_3/aclk] \
+  [get_bd_pins traffic_producer_1/ap_clk] \
+  [get_bd_pins traffic_producer_2/ap_clk] \
+  [get_bd_pins traffic_producer_3/ap_clk] \
+  [get_bd_pins traffic_producer_5/ap_clk] \
+  [get_bd_pins traffic_producer_6/ap_clk] \
+  [get_bd_pins traffic_producer_7/ap_clk] \
+  [get_bd_pins smartconnect_0/aclk1]
   connect_bd_net -net freerunning_clk_1 ${freerunning_clk} \
   [get_bd_pins qsfp_0_n_1/freerunning_clk] \
   [get_bd_pins qsfp_2_n_3/freerunning_clk] \

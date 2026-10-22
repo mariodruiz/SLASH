@@ -705,6 +705,7 @@ proc create_hier_cell_clk_rst_shell { parentCell nameHier } {
   create_bd_pin -dir I -type rst aresetn
   create_bd_pin -dir I -type clk refclk
   create_bd_pin -dir O -type clk service_clk
+  create_bd_pin -dir O -type clk network_clk
   create_bd_pin -dir O -from 0 -to 0 -type rst service_arstn
   create_bd_pin -dir O -type clk slash_clk
   create_bd_pin -dir O -from 0 -to 0 -type rst slash_arstn
@@ -796,9 +797,9 @@ proc create_hier_cell_clk_rst_shell { parentCell nameHier } {
     CONFIG.CLKOUT_MATCHED_ROUTING {false,false,false,false,false,false,false} \
     CONFIG.CLKOUT_PORT {clk_out1,clk_out2,clk_out3,clk_out4,clk_out5,clk_out6,clk_out7} \
     CONFIG.CLKOUT_REQUESTED_DUTY_CYCLE {50.000,50.000,50.000,50.000,50.000,50.000,50.000} \
-    CONFIG.CLKOUT_REQUESTED_OUT_FREQUENCY {250.000,100.000,100.000,100.000,100.000,100.000,100.000} \
+    CONFIG.CLKOUT_REQUESTED_OUT_FREQUENCY {250.000,400.000,100.000,100.000,100.000,100.000,100.000} \
     CONFIG.CLKOUT_REQUESTED_PHASE {0.000,0.000,0.000,0.000,0.000,0.000,0.000} \
-    CONFIG.CLKOUT_USED {true,false,false,false,false,false,false} \
+    CONFIG.CLKOUT_USED {true,true,false,false,false,false,false} \
     CONFIG.USE_DYN_RECONFIG {true} \
   ] $clk_wizard_service
 
@@ -864,6 +865,8 @@ proc create_hier_cell_clk_rst_shell { parentCell nameHier } {
   [get_bd_pins proc_sys_reset_1/slowest_sync_clk] \
   [get_bd_pins service_clk] \
   [get_bd_pins service_rst_pipe_slr0/CLK]
+  connect_bd_net -net clk_wizard_service_clk_out2  [get_bd_pins clk_wizard_service/clk_out2] \
+  [get_bd_pins network_clk]
   connect_bd_net -net clk_wizard_service_locked  [get_bd_pins clk_wizard_service/locked] \
   [get_bd_pins proc_sys_reset_1/dcm_locked]
   connect_bd_net -net clk_wizard_slash_clk_out1  [get_bd_pins clk_wizard_slash/clk_out1] \
@@ -3404,6 +3407,7 @@ proc create_hier_cell_static_region { parentCell nameHier } {
   create_bd_pin -dir O -type clk clk_out2
   create_bd_pin -dir O -from 0 -to 0 -type rst peripheral_aresetn1
   create_bd_pin -dir O -type clk clk_out3
+  create_bd_pin -dir O -type clk network_clk
   create_bd_pin -dir O -from 0 -to 0 -type rst peripheral_aresetn2
 
   # Create instance: noc
@@ -4139,6 +4143,8 @@ PRESENT 0} RID {WIDTH 0 PRESENT 0} RDATA {WIDTH 256 PRESENT 1} RRESP {WIDTH 2 PR
   [get_bd_pins clk_out2]
   connect_bd_net -net clk_rst_shell_clk_out2  [get_bd_pins clk_rst_shell/slash_clk] \
   [get_bd_pins clk_out3]
+  connect_bd_net -net clk_rst_shell_network_clk  [get_bd_pins clk_rst_shell/network_clk] \
+  [get_bd_pins network_clk]
   connect_bd_net -net clk_rst_shell_peripheral_aresetn  [get_bd_pins clk_rst_shell/service_arstn] \
   [get_bd_pins peripheral_aresetn1]
   connect_bd_net -net clk_rst_shell_peripheral_aresetn1  [get_bd_pins clk_rst_shell/slash_arstn] \
@@ -4669,6 +4675,8 @@ proc create_root_design { parentCell } {
   [get_bd_pins slash/static_region_clk]
   connect_bd_net -net service_clk_1  [get_bd_pins static_region/clk_out2] \
   [get_bd_pins service_layer/service_clk]
+  connect_bd_net -net network_clk_1  [get_bd_pins static_region/network_clk] \
+  [get_bd_pins service_layer/network_clk]
   connect_bd_net -net static_region_clk_1 -boundary_type upper  [get_bd_pins static_region/pl3_ref_clk]
   connect_bd_net -net user_clk_1  [get_bd_pins static_region/clk_out3] \
   [get_bd_pins slash/user_clk]
