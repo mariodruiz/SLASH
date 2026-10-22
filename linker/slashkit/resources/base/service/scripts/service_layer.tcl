@@ -1154,7 +1154,7 @@ proc create_root_design { parentCell } {
    # Create instance: smartconnect_1, and set properties
   set smartconnect_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 smartconnect_1 ]
   set_property -dict [list \
-    CONFIG.NUM_CLKS {1} \
+    CONFIG.NUM_CLKS {2} \
     CONFIG.NUM_MI {3} \
     CONFIG.NUM_SI {1} \
   ] $smartconnect_1
@@ -1667,7 +1667,8 @@ proc create_root_design { parentCell } {
   [get_bd_pins c_shift_ram_0/CLK]
   connect_bd_net -net clk_freerunning_1 ${clk_freerunning} \
   [get_bd_pins qsfp_0_n_1/clk_freerunning] \
-  [get_bd_pins qsfp_2_n_3/clk_freerunning]
+  [get_bd_pins qsfp_2_n_3/clk_freerunning] \
+  [get_bd_pins smartconnect_1/aclk1]
   connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins ilreduced_logic_0/Res] \
   [get_bd_pins traffic_producer_1/ap_rst_n] \
   [get_bd_pins traffic_producer_2/ap_rst_n] \
