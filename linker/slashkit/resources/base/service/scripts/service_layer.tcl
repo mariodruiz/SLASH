@@ -1493,6 +1493,9 @@ proc create_root_design { parentCell } {
     CONFIG.Width {1} \
   ] $c_shift_ram_0
 
+  set proc_sys_reset_network [ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_network ]
+  set_property CONFIG.C_EXT_RESET_HIGH {0} $proc_sys_reset_network
+
   # Create interface connections
   connect_bd_intf_net -intf_net Conn1 [get_bd_intf_pins dummy_noc_m_0/M00_INIS] [get_bd_intf_ports M_DCMAC_INIS0]
   connect_bd_intf_net -intf_net Conn2 [get_bd_intf_pins dummy_noc_m_1/M00_INIS] [get_bd_intf_ports M_DCMAC_INIS1]
@@ -1592,7 +1595,8 @@ proc create_root_design { parentCell } {
 
   # Create port connections
   connect_bd_net -net arstn_1  [get_bd_ports arstn] \
-  [get_bd_pins c_shift_ram_0/D]
+  [get_bd_pins c_shift_ram_0/D] \
+  [get_bd_pins proc_sys_reset_network/ext_reset_in]
   connect_bd_net -net c_shift_ram_0_Q  [get_bd_pins c_shift_ram_0/Q] \
   [get_bd_pins util_ds_buf_0/BUFG_FABRIC_I]
 
@@ -1643,6 +1647,7 @@ proc create_root_design { parentCell } {
   [get_bd_pins noc_virt_4/aclk0] \
   [get_bd_pins c_shift_ram_0/CLK]
   connect_bd_net -net network_clk_1  [get_bd_ports network_clk] \
+  [get_bd_pins proc_sys_reset_network/slowest_sync_clk] \
   [get_bd_pins dummy_noc_0/aclk0] \
   [get_bd_pins dummy_noc_1/aclk0] \
   [get_bd_pins dummy_noc_2/aclk0] \
@@ -1672,13 +1677,16 @@ proc create_root_design { parentCell } {
   [get_bd_pins qsfp_0_n_1/freerunning_clk] \
   [get_bd_pins qsfp_2_n_3/freerunning_clk] \
   [get_bd_pins smartconnect_1/aclk1]
-  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins ilreduced_logic_0/Res] \
+  connect_bd_net -net network_arstn  [get_bd_pins proc_sys_reset_network/peripheral_aresetn] \
+  [get_bd_pins qsfp_0_n_1/aresetn] \
+  [get_bd_pins qsfp_2_n_3/aresetn] \
   [get_bd_pins traffic_producer_1/ap_rst_n] \
   [get_bd_pins traffic_producer_2/ap_rst_n] \
   [get_bd_pins traffic_producer_3/ap_rst_n] \
   [get_bd_pins traffic_producer_5/ap_rst_n] \
   [get_bd_pins traffic_producer_6/ap_rst_n] \
-  [get_bd_pins traffic_producer_7/ap_rst_n] \
+  [get_bd_pins traffic_producer_7/ap_rst_n]
+  connect_bd_net -net proc_sys_reset_0_peripheral_aresetn  [get_bd_pins ilreduced_logic_0/Res] \
   [get_bd_pins eth_0/ap_rst_n] \
   [get_bd_pins eth_1/ap_rst_n] \
   [get_bd_pins eth_2/ap_rst_n] \
@@ -1687,8 +1695,6 @@ proc create_root_design { parentCell } {
   [get_bd_pins eth_5/ap_rst_n] \
   [get_bd_pins eth_6/ap_rst_n] \
   [get_bd_pins eth_7/ap_rst_n] \
-  [get_bd_pins qsfp_0_n_1/aresetn] \
-  [get_bd_pins qsfp_2_n_3/aresetn] \
   [get_bd_pins axi4_full_passthrough_0/aresetn] \
   [get_bd_pins axi_register_slice_0/aresetn] \
   [get_bd_pins axi_register_slice_1/aresetn] \
